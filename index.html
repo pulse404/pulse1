@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rayan Salim</title>
+<meta name="description" content="Rayan Salim — Business Analytics & Strategy student at Schulich. Analyst at BDO Canada, previously Toronto Pearson and RBC.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F3F5F7;
+    --surface: #FFFFFF;
+    --ink: #14202E;
+    --muted: #5E6B78;
+    --line: #DCE1E6;
+    --navy: #1D3557;
+    --signal: #F26A1B;   /* hi-vis orange, used sparingly */
+    --sky: #DCEBF7;
+    --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --r: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F1720;
+      --surface: #16212D;
+      --ink: #E7ECF1;
+      --muted: #93A1AF;
+      --line: #263444;
+      --navy: #9CC3EA;
+      --signal: #FF8A45;
+      --sky: #1A2B3D;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--font); font-size: 1.0625rem; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--navy); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.5rem; }
+  .narrow { max-width: 42rem; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; justify-content: space-between; align-items: center; height: 3.75rem; }
+  .brand { font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+  nav ul { display: flex; gap: 1.5rem; list-style: none; }
+  nav ul a { color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+  nav ul a:hover, nav ul a.active { color: var(--ink); }
+
+  /* ---------- Hero ---------- */
+  .hero { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 4rem; align-items: center; padding: 5.5rem 0 5rem; }
+  .hello { font-size: 1.15rem; color: var(--muted); margin-bottom: 1rem; }
+  .hero h1 {
+    font-size: clamp(2.3rem, 5.2vw, 3.9rem); font-weight: 600;
+    line-height: 1.06; letter-spacing: -0.035em; margin-bottom: 1.6rem; max-width: 18ch;
+  }
+  .hero .lede { font-size: 1.2rem; color: var(--muted); max-width: 36rem; }
+  .hero .lede strong { color: var(--ink); font-weight: 600; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.25rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.35rem; border-radius: 999px; font-weight: 600; font-size: 0.98rem;
+    text-decoration: none; border: 1.5px solid var(--ink); color: var(--ink); background: transparent;
+    cursor: pointer; font-family: inherit; transition: background .15s, color .15s;
+  }
+  .btn.primary { background: var(--ink); color: var(--bg); }
+  .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn.primary:hover { background: var(--signal); border-color: var(--signal); color: #fff; }
+
+  .hero-photo { position: relative; }
+  .hero-photo img { border-radius: var(--r); aspect-ratio: 3 / 4; object-fit: cover; width: 100%; }
+  .tag-float {
+    position: absolute; left: -1.5rem; bottom: 1.5rem;
+    background: var(--surface); color: var(--ink); border: 1px solid var(--line);
+    padding: 0.7rem 1rem; border-radius: 12px; font-size: 0.92rem; line-height: 1.35;
+    box-shadow: 0 10px 30px -12px rgba(20, 32, 46, .35);
+  }
+  .tag-float span:not(.live) { display: block; color: var(--muted); font-size: 0.85rem; }
+  .live { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 600; }
+  .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--signal) 55%, transparent); } 50% { box-shadow: 0 0 0 6px transparent; } }
+
+  /* one orchestrated load moment */
+  .hero > * { opacity: 0; transform: translateY(14px); animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards; }
+  .hero > *:nth-child(2) { animation-delay: .15s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  /* ---------- Sections ---------- */
+  section { padding: 5rem 0; border-top: 1px solid var(--line); scroll-margin-top: 3.75rem; }
+  h2 { font-size: clamp(1.7rem, 3vw, 2.2rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 0.75rem; }
+  .sub { color: var(--muted); max-width: 38rem; margin-bottom: 2.5rem; }
+  .prose p + p { margin-top: 1.1rem; }
+
+  /* ---------- About: ask-me chips ---------- */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .ask h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    font: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer;
+    padding: 0.5rem 0.95rem; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    transition: border-color .15s, background .15s;
+  }
+  .chip:hover { border-color: var(--navy); }
+  .chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--bg); }
+  .answer {
+    margin-top: 1.25rem; padding: 1.4rem 1.5rem; border-radius: var(--r);
+    background: var(--sky); min-height: 6.5rem;
+  }
+  .answer .q { font-size: 0.9rem; color: var(--muted); }
+  .answer .a { font-size: 1.15rem; font-weight: 500; margin-top: 0.3rem; line-height: 1.45; }
+  .answer.swap .a { animation: fadein .35s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Journey (flight route) ---------- */
+  .route { position: relative; margin: 1rem 0 2.5rem; padding-top: 2.4rem; }
+  .route-line { position: absolute; left: 0; right: 0; top: calc(2.4rem + 9px); height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px); }
+  .route-progress { position: absolute; left: 0; top: calc(2.4rem + 9px); height: 2px; background: var(--navy); width: 0; transition: width .7s cubic-bezier(.4,.1,.2,1); }
+  .plane {
+    position: absolute; top: 0; left: 0; width: 26px; height: 26px; color: var(--signal);
+    transform: translateX(-50%); transition: left .7s cubic-bezier(.4,.1,.2,1);
+  }
+  .stops { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stop {
+    font: inherit; background: none; border: 0; cursor: pointer; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.7rem; padding: 0 0.25rem;
+  }
+  .stop .dot { width: 20px; height: 20px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); transition: all .2s; }
+  .stop .org { font-weight: 600; color: var(--ink); font-size: 1rem; line-height: 1.25; }
+  .stop .yr { font-size: 0.88rem; }
+  .stop:hover .dot { border-color: var(--navy); }
+  .stop.done .dot { background: var(--navy); border-color: var(--navy); }
+  .stop[aria-selected="true"] .dot { background: var(--signal); border-color: var(--signal); box-shadow: 0 0 0 5px color-mix(in srgb, var(--signal) 22%, transparent); }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 2rem 2.25rem; display: grid; grid-template-columns: 15rem 1fr; gap: 2.5rem;
+  }
+  .panel .role { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.25; }
+  .panel .where { color: var(--muted); margin-top: 0.35rem; }
+  .panel .when { display: inline-block; margin-top: 1rem; font-size: 0.88rem; font-weight: 600; padding: 0.2rem 0.65rem; border-radius: 999px; background: var(--sky); color: var(--navy); }
+  .panel ul { list-style: none; display: grid; gap: 0.85rem; }
+  .panel li { position: relative; padding-left: 1.3rem; }
+  .panel li::before { content: ""; position: absolute; left: 0; top: 0.68em; width: 7px; height: 7px; border-radius: 2px; background: var(--navy); }
+  .panel .tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.4rem; }
+  .panel .tools span, .skill-group li {
+    font-size: 0.85rem; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted);
+  }
+  .panel.swap > * { animation: fadein .35s ease; }
+  .route-hint { color: var(--muted); font-size: 0.92rem; margin-top: 1rem; }
+
+
+  /* ---------- Day in the life (video) ---------- */
+  .day { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 4rem; align-items: center; }
+  .reels { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .reel { position: relative; border-radius: var(--r); overflow: hidden; background: var(--line); }
+  .reel video { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; }
+  .reel:nth-child(2) { margin-top: 3rem; }
+  .reel figcaption {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 2.5rem 1rem 0.9rem;
+    color: #fff; font-weight: 600; font-size: 0.95rem; line-height: 1.3;
+    background: linear-gradient(transparent, rgba(10, 16, 24, .7));
+  }
+  .reel .toggle {
+    position: absolute; top: 0.75rem; right: 0.75rem; width: 2.25rem; height: 2.25rem;
+    border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+    background: rgba(255,255,255,.88); color: #14202E;
+  }
+  .reel .toggle svg { width: 14px; height: 14px; }
+  @media (max-width: 880px) { .day { grid-template-columns: 1fr; gap: 2rem; } }
+  @media (max-width: 480px) { .reel:nth-child(2) { margin-top: 1.5rem; } .reel figcaption { font-size: 0.85rem; } }
+
+  /* ---------- Exchange ---------- */
+  .exchange { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 4rem; align-items: center; }
+  .polaroids { position: relative; aspect-ratio: 1 / 1.2; max-width: 30rem; }
+  .polaroid {
+    position: absolute; width: 62%; padding: 0.6rem 0.6rem 0; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 6px;
+    box-shadow: 0 18px 40px -20px rgba(20, 32, 46, .45);
+    cursor: pointer; transition: transform .35s cubic-bezier(.2,.7,.2,1), z-index 0s;
+  }
+  .polaroid img { aspect-ratio: 3 / 4; object-fit: cover; width: 100%; border-radius: 3px; }
+  .polaroid figcaption { font-size: 0.88rem; color: var(--muted); padding: 0.6rem 0.2rem 0.75rem; line-height: 1.35; }
+  .polaroid.a { left: 0; top: 0; transform: rotate(-4deg); z-index: 1; }
+  .polaroid.b { right: 0; top: 3.5rem; transform: rotate(3.5deg); z-index: 2; }
+  .polaroid:hover, .polaroid:focus-visible { transform: rotate(0) scale(1.03); z-index: 3; }
+  .polaroid-hint { font-size: 0.88rem; color: var(--muted); margin-top: 0.75rem; }
+  .facts-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; margin-top: 2rem; }
+  .facts-row div { background: var(--surface); padding: 1rem 1.1rem; }
+  .facts-row dt { font-size: 0.85rem; color: var(--muted); }
+  .facts-row dd { font-weight: 600; line-height: 1.3; margin-top: 0.15rem; }
+
+  /* ---------- Campus ---------- */
+  .campus { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+  .campus article { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 1.5rem; }
+  .campus .icon { font-size: 1.5rem; margin-bottom: 0.9rem; }
+  .campus h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+  .campus p { color: var(--muted); font-size: 0.95rem; margin-top: 0.3rem; }
+
+  /* ---------- Skills ---------- */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 2rem 3rem; }
+  .skill-group h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.8rem; }
+  .skill-group ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .skill-group li { font-size: 0.92rem; color: var(--ink); background: var(--surface); padding: 0.3rem 0.8rem; }
+  .certs { margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--line); }
+  .certs h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.8rem; }
+  .certs ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0.6rem 2rem; color: var(--muted); }
+
+  /* ---------- Contact ---------- */
+  .contact { text-align: left; }
+  .contact h2 { font-size: clamp(2rem, 5vw, 3.2rem); max-width: 16ch; }
+  .contact .sub { font-size: 1.15rem; }
+  .copy-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .toast { font-size: 0.92rem; color: var(--navy); font-weight: 600; opacity: 0; transition: opacity .2s; }
+  .toast.show { opacity: 1; }
+
+  footer { padding: 2.5rem 0 3.5rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+  /* ---------- Lightbox ---------- */
+  dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: min(92vw, 44rem); margin: auto; }
+  dialog.lightbox::backdrop { background: rgba(10, 16, 24, .82); }
+  dialog.lightbox img { max-height: 80vh; width: auto; margin: 0 auto; border-radius: 10px; }
+  dialog.lightbox p { color: #E7ECF1; text-align: center; margin-top: 0.9rem; }
+  dialog.lightbox button { position: fixed; top: 1rem; right: 1rem; font: inherit; font-size: 0.95rem; background: #fff; color: #14202E; border: 0; border-radius: 999px; padding: 0.5rem 1rem; cursor: pointer; font-weight: 600; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 880px) {
+    .hero, .about-grid, .exchange { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero { padding-top: 3.5rem; }
+    .hero-photo { max-width: 22rem; }
+    .tag-float { left: 1rem; }
+    .panel { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.6rem; }
+  }
+  @media (max-width: 620px) {
+    nav .wrap { gap: 1rem; }
+    nav ul { gap: 0.9rem; }
+    nav ul a { font-size: 0.88rem; }
+    nav ul li.hide-sm { display: none; }
+    section { padding: 3.75rem 0; }
+    .stop .org { font-size: 0.85rem; }
+    .stop .yr { font-size: 0.8rem; }
+    .facts-row { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .hero > * { opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">Rayan Salim</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#journey">Experience</a></li>
+      <li class="hide-sm"><a href="#exchange">Hong Kong</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <p class="hello">Hi, I'm Rayan 👋</p>
+        <h1>I help teams make sense of their data, then make it do more of the work.</h1>
+        <p class="lede">I study <strong>Business Analytics &amp; Strategic Management</strong> at Schulich and work as a <strong>Credits &amp; Incentives Analyst at BDO Canada</strong>. Before that, I was building dashboards and AI tools at Toronto Pearson and modelling lending portfolios at RBC.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#journey">See my experience</a>
+          <a class="btn" href="#contact">Get in touch</a>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img src="assets/airport.jpg" alt="Rayan in a hi-vis vest on the airfield in front of a large passenger jet">
+        <figcaption class="tag-float">
+          <span class="live">Now at BDO Canada</span>
+          <span>Toronto, graduating 2027</span>
+        </figcaption>
+      </figure>
+    </header>
+  </div>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about">
+    <div class="wrap about-grid">
+      <div>
+        <h2>A bit about me</h2>
+        <div class="prose">
+          <!-- ✏️ Rewrite these in your own voice — they're a starting point -->
+          <p>I'm a Toronto-based business student who likes sitting right where the data team and everyone else meet. A lot of my work comes down to translation: taking something technical and turning it into a clear answer someone can actually act on.</p>
+          <p>I've worked in a bank, an education startup, an airport and an accounting firm, and I spent a semester studying in Hong Kong. Every one of those places taught me the same thing in a different way: the best tools are the ones that quietly save people time.</p>
+          <p>Outside of work you'll find me involved on campus, meeting new people, and probably exploring somewhere new.</p>
+        </div>
+      </div>
+
+      <div class="ask">
+        <h3>Ask me about…</h3>
+        <div class="chips" role="group" aria-label="Questions about Rayan">
+          <button class="chip" aria-pressed="true" data-q="Where's the most unexpected place you've worked?" data-a="The airfield at Toronto Pearson. Not many analyst jobs come with a hi-vis vest and a front-row view of the jets.">Most unexpected office</button>
+          <button class="chip" aria-pressed="false" data-q="What do you geek out about?" data-a="Automating the boring stuff. At Pearson I helped roll out Copilot and Power Automate and built AI tools that took manual work off people's plates.">What I geek out about</button>
+          <button class="chip" aria-pressed="false" data-q="Farthest you've gone for school?" data-a="Hong Kong. I did a semester exchange at the Chinese University of Hong Kong, about 12,500 km from home.">Farthest I've gone for school</button>
+          <button class="chip" aria-pressed="false" data-q="What languages do you speak?" data-a="English and French. And Excel, Python, SQL and a bit of Java, if those count.">Languages</button>
+          <button class="chip" aria-pressed="false" data-q="What are you like on a team?" data-a="The bridge. I'm usually the one translating between the technical folks and everyone else, so nobody's left guessing.">On a team</button>
+          <button class="chip" aria-pressed="false" data-q="What keeps you busy on campus?" data-a="Running logistics for the Undergraduate Business Society, data consulting with 180 Degrees Consulting, and showing future students around as a Schulich Ambassador.">On campus</button>
+        </div>
+        <div class="answer" aria-live="polite">
+          <div class="q"></div>
+          <div class="a"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= JOURNEY ================= -->
+  <section id="journey">
+    <div class="wrap">
+      <h2>My flight path so far</h2>
+      <p class="sub">Four stops, each one a little further along. Tap a stop to see what I did there.</p>
+
+      <div class="route">
+        <div class="route-line"></div>
+        <div class="route-progress"></div>
+        <svg class="plane" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" transform="rotate(90 12 12)"/></svg>
+        <div class="stops" role="tablist" aria-label="Work experience"></div>
+      </div>
+
+      <div class="panel" role="tabpanel" aria-live="polite"></div>
+    </div>
+  </section>
+
+
+  <!-- ================= DAY IN THE LIFE ================= -->
+  <section id="day">
+    <div class="wrap day">
+      <div>
+        <h2>A day in the life</h2>
+        <p class="sub">Less résumé, more real life. A quick look at what a workday actually looks like for me.</p>
+      </div>
+      <div class="reels">
+        <!-- ✏️ To swap a clip: put a new .mp4 in the assets folder and change src below -->
+        <figure class="reel">
+          <video src="assets/commute.mp4" poster="assets/commute.jpg" muted loop playsinline preload="metadata" aria-label="Walking up to an office tower on Bay Street and taking the elevator to the BDO office"></video>
+          <button class="toggle" type="button" aria-label="Pause video"></button>
+          <figcaption>Clocking in on Bay Street</figcaption>
+        </figure>
+        <figure class="reel">
+          <video src="assets/deepwork.mp4" poster="assets/deepwork.jpg" muted loop playsinline preload="metadata" aria-label="Rayan writing notes at a desk and sipping a coffee"></video>
+          <button class="toggle" type="button" aria-label="Pause video"></button>
+          <figcaption>Heads-down mode. Coffee required.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXCHANGE ================= -->
+  <section id="exchange">
+    <div class="wrap exchange">
+      <div>
+        <!-- ✏️ Change the captions to say where each photo was taken -->
+        <div class="polaroids">
+          <figure class="polaroid a" tabindex="0" data-caption="Looking out over the city">
+            <img src="assets/skyline.jpg" alt="Rayan tipping his cap in front of a floor-to-ceiling window over a city skyline">
+            <figcaption>Looking out over the city</figcaption>
+          </figure>
+          <figure class="polaroid b" tabindex="0" data-caption="Found a wall of wanted posters. Had to stop.">
+            <img src="assets/wanted-posters.jpg" alt="Rayan standing beside a yellow wall covered in anime wanted posters">
+            <figcaption>Found a wall of wanted posters. Had to stop.</figcaption>
+          </figure>
+        </div>
+        <p class="polaroid-hint">Tap a photo to see it bigger.</p>
+      </div>
+
+      <div>
+        <h2>A semester in Hong Kong</h2>
+        <div class="prose">
+          <!-- ✏️ Add your own stories here: favourite spot, food, a moment you'll remember -->
+          <p>I spent a semester on exchange at the Chinese University of Hong Kong, trading Toronto winters for one of the densest, fastest-moving cities in the world.</p>
+          <p>Studying business on the other side of the world changed how I think about it. Markets, workplaces and even group projects run differently when everyone brings a different starting point, and learning to adapt to that quickly is something I've carried into every role since.</p>
+        </div>
+        <dl class="facts-row">
+          <div><dt>School</dt><dd>CUHK</dd></div>
+          <div><dt>Distance from home</dt><dd>~12,500 km</dd></div>
+          <div><dt>Time difference</dt><dd>12–13 hours</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CAMPUS ================= -->
+  <section id="campus">
+    <div class="wrap">
+      <h2>Around campus</h2>
+      <p class="sub">What I'm part of at the Schulich School of Business.</p>
+      <div class="campus">
+        <article><div class="icon">📦</div><h3>Director of Logistics</h3><p>Undergraduate Business Society</p></article>
+        <article><div class="icon">📊</div><h3>Data Analyst Consultant</h3><p>180 Degrees Consulting</p></article>
+        <article><div class="icon">🎓</div><h3>Undergrad Ambassador</h3><p>Schulich School of Business</p></article>
+        <article><div class="icon">🌏</div><h3>Exchange Student</h3><p>Chinese University of Hong Kong</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SKILLS ================= -->
+  <section id="skills">
+    <div class="wrap">
+      <h2>My toolkit</h2>
+      <p class="sub">The tools I reach for most.</p>
+      <div class="skills-grid">
+        <div class="skill-group"><h3>Data &amp; analytics</h3><ul><li>Excel</li><li>SQL</li><li>Python</li><li>Power BI</li><li>Tableau</li><li>SAS</li></ul></div>
+        <div class="skill-group"><h3>Automation &amp; AI</h3><ul><li>Microsoft Copilot</li><li>Power Automate</li><li>SharePoint</li><li>Java</li></ul></div>
+        <div class="skill-group"><h3>Finance &amp; research</h3><ul><li>Bloomberg</li><li>Financial modelling</li><li>Google Analytics</li><li>Semrush</li><li>Market research</li></ul></div>
+      </div>
+      <div class="certs">
+        <h3>Certifications &amp; programs</h3>
+        <ul>
+          <li>SAS Certified Visual Business Analyst</li>
+          <li>Bloomberg Market Concepts</li>
+          <li>Bloomberg Finance Fundamentals</li>
+          <li>Schulich Business Excellence Academy</li>
+          <li>Marsh McLennan Career Preparation Program</li>
+          <li>Business Specialist High Skills Major</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <h2>Let's grab a coffee (virtual or real).</h2>
+      <p class="sub">Whether it's about a role, a project, or you just want to talk about data, airports or Hong Kong, I'd love to hear from you.</p>
+      <div class="copy-row">
+        <a class="btn primary" href="mailto:rs.rayansalim0@gmail.com">Email me</a>
+        <button class="btn" id="copyEmail" type="button">Copy email address</button>
+        <a class="btn" href="https://www.linkedin.com/in/rayansalim/" target="_blank" rel="noopener">LinkedIn</a>
+        <span class="toast" id="toast" role="status">Copied</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> Rayan Salim</span>
+    <span>Made in Toronto</span>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox">
+  <button type="button" id="closeLb">Close</button>
+  <img alt="">
+  <p></p>
+</dialog>
+
+<script>
+  /* ---------- Experience data (edit here) ---------- */
+  const stops = [
+    {
+      org: "Edventive", short: "Edventive", yr: "2024",
+      role: "Research Assistant & SEO Analyst",
+      when: "Feb 2024 – Apr 2025",
+      points: [
+        "Wrote research reports on AI grading that set the groundwork for future initiatives.",
+        "Dug into traffic, click-through and conversion data in Google Analytics and Semrush to spot keyword opportunities and see where competitors stood.",
+        "Turned interviews into insights on systemic challenges in education, and presented findings directly to the CEO.",
+        "Helped build grant proposals by pulling research together and making the case for its impact."
+      ],
+      tools: ["Google Analytics", "Semrush", "Research"]
+    },
+    {
+      org: "Royal Bank of Canada", short: "RBC", yr: "2025",
+      role: "Summer Analyst, Home Equity Finance",
+      when: "May – Aug 2025",
+      points: [
+        "Gathered data and ran market research to support new home equity lending products.",
+        "Helped with financial modelling and forecasting on home equity loan portfolios to surface trends and opportunities.",
+        "Built presentations, dashboards and analytics for leadership reviews.",
+        "Worked on process improvements to make things smoother for both the team and customers."
+      ],
+      tools: ["Financial modelling", "Forecasting", "Dashboards"]
+    },
+    {
+      org: "Toronto Pearson Airport", short: "Toronto Pearson", yr: "2026",
+      role: "Transformation Strategy Analyst",
+      when: "May – Aug 2026",
+      points: [
+        "Built Power BI dashboards that gave executive leadership a live view of key operational metrics.",
+        "Co-developed new SharePoint portals for the CEO's Office, clearing up bottlenecks in executive communication.",
+        "Shaped the department's AI adoption strategy and championed the rollout of Microsoft Copilot and Power Automate.",
+        "Created AI automation tools across teams, and helped the Head of Procurement automate financial capacity assessment models."
+      ],
+      tools: ["Power BI", "SharePoint", "Copilot", "Power Automate"]
+    },
+    {
+      org: "BDO Canada", short: "BDO Canada", yr: "Now",
+      role: "Credits & Incentives Analyst",
+      when: "Sep 2026 – Present",
+      points: [
+        "Manage complex datasets in Excel, making sure government and private funding programs are entered accurately and consistently.",
+        "Act as the link between the technical data team and non-technical stakeholders, turning funding requirements into plain business language.",
+        "Research North American funding programs and summarize the news and updates that matter for the team.",
+        "Support the Data Team Lead on projects that improve database integrity and reporting."
+      ],
+      tools: ["Excel", "Data integrity", "Research"]
+    }
+  ];
+
+  const stopsEl = document.querySelector('.stops');
+  const panel = document.querySelector('.panel');
+  const plane = document.querySelector('.plane');
+  const progress = document.querySelector('.route-progress');
+
+  stops.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'stop'; b.type = 'button';
+    b.setAttribute('role', 'tab'); b.id = 'stop-' + i;
+    b.innerHTML = `<span class="dot"></span><span class="org">${s.short}</span><span class="yr">${s.yr}</span>`;
+    b.addEventListener('click', () => select(i));
+    b.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); select(Math.min(i + 1, stops.length - 1), true); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); select(Math.max(i - 1, 0), true); }
+    });
+    stopsEl.appendChild(b);
+  });
+
+  function select(i, focus) {
+    const btns = stopsEl.querySelectorAll('.stop');
+    btns.forEach((b, j) => {
+      b.setAttribute('aria-selected', j === i);
+      b.tabIndex = j === i ? 0 : -1;
+      b.classList.toggle('done', j < i);
+    });
+    if (focus) btns[i].focus();
+    // move plane to centre of the selected stop
+    const routeBox = stopsEl.getBoundingClientRect();
+    const dot = btns[i].querySelector('.dot').getBoundingClientRect();
+    const x = dot.left + dot.width / 2 - routeBox.left;
+    plane.style.left = x + 'px';
+    progress.style.width = x + 'px';
+    const s = stops[i];
+    panel.setAttribute('aria-labelledby', 'stop-' + i);
+    panel.innerHTML = `
+      <div>
+        <div class="role">${s.role}</div>
+        <div class="where">${s.org}</div>
+        <span class="when">${s.when}</span>
+      </div>
+      <div>
+        <ul>${s.points.map(p => `<li>${p}</li>`).join('')}</ul>
+        <div class="tools">${s.tools.map(t => `<span>${t}</span>`).join('')}</div>
+      </div>`;
+    panel.classList.remove('swap'); void panel.offsetWidth; panel.classList.add('swap');
+    current = i;
+  }
+  let current = stops.length - 1;
+  select(current);
+  window.addEventListener('resize', () => select(current));
+
+  /* ---------- Ask-me chips ---------- */
+  const chips = document.querySelectorAll('.chip');
+  const ans = document.querySelector('.answer');
+  function showChip(c) {
+    chips.forEach(x => x.setAttribute('aria-pressed', x === c));
+    ans.querySelector('.q').textContent = c.dataset.q;
+    ans.querySelector('.a').textContent = c.dataset.a;
+    ans.classList.remove('swap'); void ans.offsetWidth; ans.classList.add('swap');
+  }
+  chips.forEach(c => c.addEventListener('click', () => showChip(c)));
+  showChip(chips[0]);
+
+  /* ---------- Lightbox ---------- */
+  const lb = document.getElementById('lightbox');
+  document.querySelectorAll('.polaroid').forEach(p => {
+    const open = () => {
+      const img = p.querySelector('img');
+      lb.querySelector('img').src = img.src;
+      lb.querySelector('img').alt = img.alt;
+      lb.querySelector('p').textContent = p.dataset.caption;
+      lb.showModal();
+    };
+    p.addEventListener('click', open);
+    p.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+  document.getElementById('closeLb').addEventListener('click', () => lb.close());
+  lb.addEventListener('click', e => { if (e.target === lb) lb.close(); });
+
+  /* ---------- Copy email ---------- */
+  document.getElementById('copyEmail').addEventListener('click', async () => {
+    const t = document.getElementById('toast');
+    try { await navigator.clipboard.writeText('rs.rayansalim0@gmail.com'); t.textContent = 'Copied'; }
+    catch { t.textContent = 'rs.rayansalim0@gmail.com'; }
+    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200);
+  });
+
+
+  /* ---------- Day-in-the-life videos ---------- */
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PLAY = '<svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg>';
+  const PAUSE = '<svg viewBox="0 0 14 14" fill="currentColor"><rect x="2.5" y="1.5" width="3.2" height="11" rx="1"/><rect x="8.3" y="1.5" width="3.2" height="11" rx="1"/></svg>';
+  document.querySelectorAll('.reel').forEach(r => {
+    const v = r.querySelector('video'), btn = r.querySelector('.toggle');
+    let userPaused = reduce;
+    const sync = () => { btn.innerHTML = v.paused ? PLAY : PAUSE; btn.setAttribute('aria-label', v.paused ? 'Play video' : 'Pause video'); };
+    v.addEventListener('play', sync); v.addEventListener('pause', sync); sync();
+    btn.addEventListener('click', () => { if (v.paused) { userPaused = false; v.play().catch(()=>{}); } else { userPaused = true; v.pause(); } });
+    // only play while on screen, to save battery and data
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !userPaused) v.play().catch(()=>{}); else v.pause();
+    }, { threshold: 0.35 }).observe(v);
+  });
+
+  /* ---------- Active nav link ---------- */
+  const links = document.querySelectorAll('nav ul a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + en.target.id));
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => obs.observe(s));
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
